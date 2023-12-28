@@ -1,0 +1,15 @@
+# 编译器运行的开发平台:x86_64
+# 而我们希望目标文件运行在riskv-64
+# 称交叉编译:Cross Compile
+# 该config修改了cargo的默认目标平台为riscv64gc-unknown-none-elf
+[build]
+target = "riscv64gc-unknown-none-elf"
+
+# 链接器默认的内存布局并不符合我们的要求,我们需要链接脚本调整链接器的行为
+# 使最终生成的可执行文件的内存布局符合Qemu的预期
+# 即内核的第一条指令地址应处于0x80200000
+
+[target.riscv64gc-unknown-none-elf]
+rustflags = [
+	"-Clink-arg=-Tsrc/linker.ld","-Cforce-frame-pointers=yes"
+]
