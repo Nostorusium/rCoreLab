@@ -1,18 +1,20 @@
 #![no_std]
 #![no_main]
-mod lang_items;
+#![feature(panic_info_message)]
 
-//fn main() {
-//        println!("Hello, world!");
-//}
+#[macro_use]
+mod console;
+mod lang_items;
+mod sbi;
 
 use core::arch::global_asm;
 global_asm!(include_str!("entry.asm"));
 
 #[no_mangle]
-pub fn rust_main() -> !{
+pub fn rust_main() -> ! {
     clear_bss();
-    loop{}
+    println!("Hello,world!");
+    panic!("Shutdown machine!");
 }
 
 //此处进行对.bss段的清零 我们需要保证被分配到.bss段的全局变量为0
